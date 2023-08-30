@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         //@TODO 4- depois de persistir o usuario exibir sempre as informacoes no EditText  se a
     // sharedpref possuir algum valor, exibir no proprio editText o valor salvo
 
-        nomeUsuario = "luismendes070"
+        nomeUsuario.setText("luismendes070")
 
     }
 
