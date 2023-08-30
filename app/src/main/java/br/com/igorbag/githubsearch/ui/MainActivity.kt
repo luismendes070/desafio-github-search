@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import br.com.igorbag.githubsearch.R
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     // Metodo responsavel por realizar o setup da view e recuperar os Ids do layout
     fun setupView() {
         //@TODO 1 - Recuperar os Id's da tela para a Activity com o findViewById
+        nomeUsuario =  findViewById(R.id.et_nome_usuario)
     }
 
     //metodo responsavel por configurar os listeners click da tela
