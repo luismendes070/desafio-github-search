@@ -31,14 +31,24 @@ class MainActivity : AppCompatActivity() {
     // Metodo responsavel por realizar o setup da view e recuperar os Ids do layout
     fun setupView() {
         //@TODO 1 - Recuperar os Id's da tela para a Activity com o findViewById
-        nomeUsuario =  findViewById(R.id.et_nome_usuario)
+        nomeUsuario = findViewById(R.id.et_nome_usuario)
     }
 
     //metodo responsavel por configurar os listeners click da tela
     private fun setupListeners() {
         //@TODO 2 - colocar a acao de click do botao confirmar
-        nomeUsuario.setOnClickListener {
-            nomeUsuario.setText("luismendes070")
+        try {
+
+            nomeUsuario.setOnClickListener {
+                nomeUsuario.setText("luismendes070")
+            }
+
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+
+        } finally {
+
         }
     }
 
@@ -50,9 +60,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun showUserName() {
         //@TODO 4- depois de persistir o usuario exibir sempre as informacoes no EditText  se a
-    // sharedpref possuir algum valor, exibir no proprio editText o valor salvo
+        // sharedpref possuir algum valor, exibir no proprio editText o valor salvo
 
-        nomeUsuario.setText("luismendes070")
+        try {
+            nomeUsuario.setText("luismendes070")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+
+        }
 
     }
 
