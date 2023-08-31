@@ -42,6 +42,13 @@ class MainActivity : AppCompatActivity() {
         getAllReposByUserName()
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        // Clear all items from the RecyclerView
+        listaRepositories.clearOnScrollListeners()
+    }
+
+
     // Metodo responsavel por realizar o setup da view e recuperar os Ids do layout
     fun setupView() {
         //@TODO 1 - Recuperar os Id's da tela para a Activity com o findViewById
