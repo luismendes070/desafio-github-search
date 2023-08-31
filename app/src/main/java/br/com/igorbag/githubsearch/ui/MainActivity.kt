@@ -1,30 +1,44 @@
 package br.com.igorbag.githubsearch.ui
 
+// ChatGPT
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.igorbag.githubsearch.R
 import br.com.igorbag.githubsearch.data.GitHubService
 import br.com.igorbag.githubsearch.domain.Repository
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
+
+import br.com.igorbag.githubsearch.ui.adapter.RepositoryAdapter
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var nomeUsuario: EditText
-    lateinit var btnConfirmar: Button
-    lateinit var listaRepositories: RecyclerView
-    lateinit var githubApi: GitHubService
+    private lateinit var nomeUsuario: EditText
+    private lateinit var btnConfirmar: Button
+    private lateinit var listaRepositories: RecyclerView
+    private lateinit var githubApi: GitHubService
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupView()
-        showUserName()
+        setupListeners()
         setupRetrofit()
+        sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        showUserName()
         getAllReposByUserName()
     }
 
@@ -32,6 +46,8 @@ class MainActivity : AppCompatActivity() {
     fun setupView() {
         //@TODO 1 - Recuperar os Id's da tela para a Activity com o findViewById
         nomeUsuario = findViewById(R.id.et_nome_usuario)
+        btnConfirmar = findViewById(R.id.btn_confirmar)
+        listaRepositories = findViewById(R.id.rv_lista_repositories)
     }
 
     //metodo responsavel por configurar os listeners click da tela
@@ -39,8 +55,8 @@ class MainActivity : AppCompatActivity() {
         //@TODO 2 - colocar a acao de click do botao confirmar
         try {
 
-            nomeUsuario.setOnClickListener {
-                nomeUsuario.setText("luismendes070")
+            btnConfirmar.setOnClickListener {
+                saveUserLocal()
             }
 
         } catch (e: Exception) {
@@ -56,6 +72,10 @@ class MainActivity : AppCompatActivity() {
     // salvar o usuario preenchido no EditText utilizando uma SharedPreferences
     private fun saveUserLocal() {
         //@TODO 3 - Persistir o usuario preenchido na editText com a SharedPref no listener do botao salvar
+        val username = nomeUsuario.text.toString()
+        val editor = sharedPreferences.edit()
+        editor.putString("username", username)
+        editor.apply()
     }
 
     private fun showUserName() {
@@ -63,7 +83,8 @@ class MainActivity : AppCompatActivity() {
         // sharedpref possuir algum valor, exibir no proprio editText o valor salvo
 
         try {
-            nomeUsuario.setText("luismendes070")
+            val savedUsername = sharedPreferences.getString("username", "luismendes070")
+            nomeUsuario.setText(savedUsername)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -80,11 +101,57 @@ class MainActivity : AppCompatActivity() {
            URL_BASE da API do  GitHub= https://api.github.com/
            lembre-se de utilizar o GsonConverterFactory mostrado no curso
         */
+
+        try {
+            val retrofit = Retrofit.Builder()
+                .baseUrl("https://api.github.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+
+            githubApi = retrofit.create(GitHubService::class.java)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+
+        }
+
     }
 
     //Metodo responsavel por buscar todos os repositorios do usuario fornecido
     fun getAllReposByUserName() {
         // TODO 6 - realizar a implementacao do callback do retrofit e chamar o metodo setupAdapter se retornar os dados com sucesso
+        try {
+
+            val savedUsername = sharedPreferences.getString("username", "")
+            if (!savedUsername.isNullOrEmpty()) {
+
+                // FIX ChatGPT error Bard error
+                githubApi.getAllRepositoriesByUser(savedUsername)
+                    .enqueue(object : Callback<List<Repository>> {
+                        override fun onResponse(
+                            call: Call<List<Repository>>,
+                            response: Response<List<Repository>>
+                        ) {
+                            if (response.isSuccessful) {
+                                val repositories = response.body()
+                                repositories?.let {
+                                    setupAdapter(it)
+                                }
+                            }
+                        }
+
+                        override fun onFailure(call: Call<List<Repository>>, t: Throwable) {
+                            // Handle failure
+                        }
+                    })
+            }
+
+        } catch (e: Exception) {
+            e.message
+            e.printStackTrace()
+        } finally {
+
+        }
     }
 
     // Metodo responsavel por realizar a configuracao do adapter
@@ -93,6 +160,18 @@ class MainActivity : AppCompatActivity() {
             @TODO 7 - Implementar a configuracao do Adapter , construir o adapter e instancia-lo
             passando a listagem dos repositorios
          */
+        try {
+            val adapter = RepositoryAdapter(list) { repository ->
+                shareRepositoryLink(repository.url)
+            }
+
+            listaRepositories.adapter = adapter
+            listaRepositories.layoutManager = LinearLayoutManager(this)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+
+        }
     }
 
 

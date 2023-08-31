@@ -1,8 +1,10 @@
 package br.com.igorbag.githubsearch.ui.adapter
 
+// ChatGPT
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import br.com.igorbag.githubsearch.R
 import br.com.igorbag.githubsearch.domain.Repository
@@ -14,7 +16,7 @@ class RepositoryAdapter(private val repositories: List<Repository>) :
     var btnShareLister: (Repository) -> Unit = {}
 
     // Cria uma nova view
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Object{
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.repository_item, parent, false)
         return ViewHolder(view)
@@ -35,11 +37,32 @@ class RepositoryAdapter(private val repositories: List<Repository>) :
         //holder.favorito.setOnClickListener {
         //    btnShareLister(repositores[position])
         //}
+        try {
+
+            // BingChat
+
+            // holder.preco.text = repositories[position].atributo
+
+            // Exemplo de click no item
+            holder.itemView.setOnClickListener {
+                carItemLister(repositories[position])
+            }
+
+            // Exemplo de click no btn Share
+            // holder.favorito.setOnClickListener {
+                btnShareLister(repositories[position])
+            // }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+
+        }
     }
 
     // Pega a quantidade de repositorios da lista
     //@TODO 9 - realizar a contagem da lista
-    override fun getItemCount(): Int = 0
+    override fun getItemCount(): Int = repositories.size
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         //@TODO 10 - Implementar o ViewHolder para os repositorios
@@ -52,6 +75,8 @@ class RepositoryAdapter(private val repositories: List<Repository>) :
         //    }
 
     }
+
+
 }
 
 
