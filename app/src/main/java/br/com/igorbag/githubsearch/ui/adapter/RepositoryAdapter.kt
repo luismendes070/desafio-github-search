@@ -16,7 +16,7 @@ class RepositoryAdapter(private val repositories: List<Repository>) :
     var btnShareLister: (Repository) -> Unit = {}
 
     // Cria uma nova view
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Object{
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder{
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.repository_item, parent, false)
         return ViewHolder(view)
@@ -73,6 +73,9 @@ class RepositoryAdapter(private val repositories: List<Repository>) :
         //    view.apply {
         //        atributo = findViewById(R.id.item_view)
         //    }
+
+
+
 
     }
 

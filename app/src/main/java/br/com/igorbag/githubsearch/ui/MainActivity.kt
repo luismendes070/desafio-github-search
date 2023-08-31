@@ -161,9 +161,13 @@ class MainActivity : AppCompatActivity() {
             passando a listagem dos repositorios
          */
         try {
-            val adapter = RepositoryAdapter(list) { repository ->
-                shareRepositoryLink(repository.url)
-            }
+            // val adapter = RepositoryAdapter(list) { repository ->
+               //  shareRepositoryLink(repository.url)
+            // }
+
+            val adapter = RepositoryAdapter(list)
+
+            // adapter.onItemClick(this)
 
             listaRepositories.adapter = adapter
             listaRepositories.layoutManager = LinearLayoutManager(this)
